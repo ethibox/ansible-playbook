@@ -1,0 +1,50 @@
+- name: Get latest restic version
+  uri:
+    url: "https://api.github.com/repos/restic/restic/releases/latest"
+    body_format: json
+  register: restic_latest_release
+  until: restic_latest_release.status == 200
+  retries: 5
+  delay: 2
+
+- name: Set restic version fact
+  set_fact:
+    restic_version: "{{ restic_latest_release.json.tag_name | regex_replace('^v', '') }}"
+
+- name: Create temporary directory for restic download
+  file:
+    path: "/tmp/restic"
+    state: directory
+    mode: '0755'
+
+- name: Install bzip2 for unarchiving restic
+  become: true
+  ansible.builtin.apt:
+    name: bzip2
+    state: present
+
+- name: Download restic binary
+  ansible.builtin.get_url:
+    url: "https://github.com/restic/restic/releases/download/v{{ restic_version }}/restic_{{ restic_version }}_linux_amd64.bz2"
+    dest: "/tmp/restic/restic_{{ restic_version }}_linux_amd64.bz2"
+    mode: '0644'
+
+- name: Decompress restic binary
+  ansible.builtin.command: "bzip2 -d /tmp/restic/restic_{{ restic_version }}_linux_amd64.bz2"
+  args:
+    creates: "/tmp/restic/restic_{{ restic_version }}_linux_amd64"
+
+- name: Install restic binary
+  copy:
+    src: "/tmp/restic/restic_{{ restic_version }}_linux_amd64"
+    dest: "/usr/local/bin/restic"
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+  become: yes
+  
+- name: Clean up temporary directory
+  file:
+    path: "/tmp/restic"
+    state: absent

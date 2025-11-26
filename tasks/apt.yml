@@ -1,0 +1,17 @@
+- name: Package installation
+  apt: name={{ item }} update_cache=yes state=latest
+  become: true
+  with_items:
+    - git
+    - htop
+    - vim
+    - ncdu
+    - zip
+    - unzip
+    - locate
+    - telnet
+    - curl
+    - tmux
+    - jq
+    - iputils-ping
+    - trash-cli

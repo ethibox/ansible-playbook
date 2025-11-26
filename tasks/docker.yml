@@ -1,0 +1,9 @@
+- name: Check if docker is installed
+  shell: which docker
+  register: docker_exists
+  failed_when: false
+  changed_when: false
+
+- name: Install latest Docker from get.docker.com
+  shell: "curl -fsSL https://get.docker.com | sh"
+  when: docker_exists.rc != 0

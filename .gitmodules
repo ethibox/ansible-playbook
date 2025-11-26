@@ -1,6 +1,0 @@
-[submodule "roles/fail2ban"]
-	path = roles/fail2ban
-	url = https://github.com/Oefenweb/ansible-fail2ban
-[submodule "roles/firewall"]
-	path = roles/firewall
-	url = https://github.com/johackim/ansible-role-firewall

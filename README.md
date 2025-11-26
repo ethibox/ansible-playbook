@@ -1,18 +1,17 @@
-Ethibox ansible playbook
-===
+# Ansible playbook
 
-> Ethibox ansible playbook for debian/ubuntu
+> Ansible playbook for debian/ubuntu
 
-## Quick Start
+## 📦 Usage
 
 ```bash
-git clone --recursive https://github.com/ethibox/ethibox-playbook
+git clone https://github.com/ethibox/ansible-playbook
 ansible-galaxy collection install devsec.hardening
-ansible-playbook playbook.yml [-t <tag>] -u <user> -i <host>,
+ansible-playbook playbook.yml -u <user> -i <host>,
 ```
 
-## License
+## 📜 License
 
-This project is licensed under the GNU GPL v3.0 - see the [LICENSE](LICENSE) file for details
+This project is licensed under the GNU GPL v3.0 - see the [LICENSE.txt](https://raw.githubusercontent.com/ethibox/ansible-playbook/master/LICENSE.txt) file for details.
 
 **Free Software, Hell Yeah!**

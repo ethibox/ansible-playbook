@@ -1,23 +1,11 @@
----
+- hosts: "{{ target | default('all') }}"
+  become: yes
 
-- name: Installation
-  hosts: "{{ target | default('all') }}"
-  vars_files:
-    - vars/main.yml
-
-  collections:
-    - devsec.hardening
+  tasks:
+    - include_tasks: tasks/apt.yml
+    - include_tasks: tasks/restic.yml
+    - include_tasks: tasks/docker.yml
 
   roles:
-    - { role: user, tags: ['user', 'base', 'minimal'] }
-    - { role: swap, tags: ['swap', 'base', 'minimal'] }
-    - { role: crontab, tags: ['crontab', 'base', 'minimal'] }
-    - { role: apt, tags: ['apt', 'base', 'minimal'] }
-    - { role: firewall, tags: ['firewall', 'security', 'base'] }
-    - { role: fail2ban, tags: ['fail2ban', 'security', 'base'] }
-    - { role: devsec.hardening.ssh_hardening, tags: ['ssh-hardening', 'hardening', 'security', 'base'] }
-    - { role: devsec.hardening.os_hardening, tags: ['os-hardening', 'hardening', 'security', 'base'] }
-
-  post_tasks:
-    - shell: usermod -p "*" {{ user }} # Unlock account after ssh-hardening
-...
+    - devsec.hardening.os_hardening
+    - devsec.hardening.ssh_hardening
