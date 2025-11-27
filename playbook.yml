@@ -5,7 +5,10 @@
     - include_tasks: tasks/apt.yml
     - include_tasks: tasks/restic.yml
     - include_tasks: tasks/docker.yml
+    - include_tasks: tasks/iptables.yml
 
   roles:
     - devsec.hardening.os_hardening
-    - devsec.hardening.ssh_hardening
+    - role: devsec.hardening.ssh_hardening
+      vars:
+        sshd_use_pam: 'no'

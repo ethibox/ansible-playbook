@@ -1,0 +1,48 @@
+- name: Install iptables-persistent
+  apt:
+    name: iptables-persistent
+    state: present
+
+- name: Set default INPUT policy to ACCEPT temporarily
+  iptables:
+    chain: INPUT
+    policy: ACCEPT
+
+- name: Flush all iptables rules
+  iptables:
+    flush: yes
+
+- name: Allow incoming SSH connections
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 22
+    jump: ACCEPT
+
+- name: Allow loopback traffic
+  iptables:
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+
+- name: Allow established and related incoming connections
+  iptables:
+    chain: INPUT
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+
+- name: Allow incoming ICMP (ping)
+  iptables:
+    chain: INPUT
+    protocol: icmp
+    icmp_type: echo-request
+    jump: ACCEPT
+
+- name: Set default INPUT policy to DROP
+  iptables:
+    chain: INPUT
+    policy: DROP
+
+- name: Save iptables rules
+  shell: netfilter-persistent save
+  changed_when: false
