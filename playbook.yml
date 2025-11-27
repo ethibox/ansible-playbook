@@ -6,9 +6,8 @@
     - include_tasks: tasks/restic.yml
     - include_tasks: tasks/docker.yml
     - include_tasks: tasks/iptables.yml
+    - include_tasks: tasks/fail2ban.yml
 
   roles:
     - devsec.hardening.os_hardening
-    - role: devsec.hardening.ssh_hardening
-      vars:
-        sshd_use_pam: 'no'
+    - devsec.hardening.ssh_hardening

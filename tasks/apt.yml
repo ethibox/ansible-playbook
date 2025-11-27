@@ -9,7 +9,6 @@
     - zip
     - unzip
     - locate
-    - telnet
     - curl
     - tmux
     - jq
