@@ -1,31 +1,31 @@
 ---
 - name: Install CrowdSec Repository
-  ansible.builtin.shell:
+  shell:
     cmd: "curl -s https://install.crowdsec.net | sh"
     creates: "/etc/apt/sources.list.d/crowdsec.list"
   become: yes
 
 - name: Install CrowdSec package
-  ansible.builtin.apt:
+  apt:
     name: crowdsec
     state: present
     update_cache: yes
   become: yes
 
 - name: Install CrowdSec firewall bouncer for iptables
-  ansible.builtin.apt:
+  apt:
     name: crowdsec-firewall-bouncer-iptables
     state: present
   become: yes
 
 - name: Install crowdsecurity/traefik collection
-  ansible.builtin.command:
+  command:
     cmd: "cscli collections install crowdsecurity/traefik"
     creates: "/etc/crowdsec/collections/traefik.yaml"
   become: yes
 
 - name: Create traefik acquis file
-  ansible.builtin.copy:
+  copy:
     dest: "/etc/crowdsec/acquis.d/traefik.yaml"
     content: |
       source: docker
@@ -36,7 +36,7 @@
   become: yes
 
 - name: Enable docker user for firewall bouncer
-  ansible.builtin.replace:
+  replace:
     path: /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
     regexp: '^#(\s*- DOCKER-USER.*)'
     replace: '\1'
