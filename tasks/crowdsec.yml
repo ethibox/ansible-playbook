@@ -28,8 +28,9 @@
   ansible.builtin.copy:
     dest: "/etc/crowdsec/acquis.d/traefik.yaml"
     content: |
-      filenames:
-        - /var/log/traefik/*.log
+      source: docker
+      service_name:
+       - traefik_traefik
       labels:
         type: traefik
   become: yes
