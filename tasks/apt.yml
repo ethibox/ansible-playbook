@@ -14,3 +14,10 @@
     - jq
     - iputils-ping
     - trash-cli
+    - ripgrep
+    - fd-find
+    - unattended-upgrades
+
+- name: Configure unattended-upgrades
+  command: dpkg-reconfigure -f noninteractive unattended-upgrades
+  become: true
