@@ -2,6 +2,7 @@
   become: yes
 
   pre_tasks:
+    - include_tasks: tasks/mc.yml
     - include_tasks: tasks/apt.yml
     - include_tasks: tasks/restic.yml
     - include_tasks: tasks/rclone.yml
