@@ -8,6 +8,7 @@
     - include_tasks: tasks/docker.yml
     - include_tasks: tasks/iptables.yml
     - include_tasks: tasks/crowdsec.yml
+    - include_tasks: tasks/sysctl.yml
 
   roles:
     - devsec.hardening.os_hardening

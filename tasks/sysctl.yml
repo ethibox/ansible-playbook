@@ -1,0 +1,15 @@
+- name: Set fs.inotify.max_user_instances
+  sysctl:
+    name: fs.inotify.max_user_instances
+    value: "512"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Set vm.max_map_count
+  sysctl:
+    name: vm.max_map_count
+    value: "262144"
+    sysctl_set: yes
+    state: present
+    reload: yes
