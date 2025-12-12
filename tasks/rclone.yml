@@ -1,0 +1,10 @@
+- name: Check if rclone is installed
+  shell: which rclone
+  register: rclone_exists
+  failed_when: false
+  changed_when: false
+
+- name: Install latest rclone
+  shell: "curl https://rclone.org/install.sh | bash"
+  when: rclone_exists.rc != 0
+  become: true

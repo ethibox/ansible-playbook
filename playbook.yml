@@ -4,6 +4,7 @@
   pre_tasks:
     - include_tasks: tasks/apt.yml
     - include_tasks: tasks/restic.yml
+    - include_tasks: tasks/rclone.yml
     - include_tasks: tasks/docker.yml
     - include_tasks: tasks/iptables.yml
     - include_tasks: tasks/crowdsec.yml
