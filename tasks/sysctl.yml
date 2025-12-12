@@ -1,7 +1,7 @@
 - name: Set fs.inotify.max_user_instances
   sysctl:
     name: fs.inotify.max_user_instances
-    value: "512"
+    value: "8192"
     sysctl_set: yes
     state: present
     reload: yes
