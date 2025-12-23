@@ -1,0 +1,43 @@
+- name: Get latest Go version
+  uri:
+    url: "https://go.dev/dl/?mode=json"
+    return_content: yes
+  register: go_versions
+
+- name: Set Go version fact
+  set_fact:
+    go_version: "{{ go_versions.json[0].version }}"
+
+- name: Download Go
+  get_url:
+    url: "https://go.dev/dl/{{ go_version }}.linux-amd64.tar.gz"
+    dest: "/tmp/{{ go_version }}.linux-amd64.tar.gz"
+    mode: '0644'
+
+- name: Remove existing Go installation
+  file:
+    path: /usr/local/go
+    state: absent
+  become: true
+
+- name: Extract Go to /usr/local
+  unarchive:
+    src: "/tmp/{{ go_version }}.linux-amd64.tar.gz"
+    dest: /usr/local
+    remote_src: yes
+  become: true
+
+- name: Setup Go environment variables
+  copy:
+    content: |
+      export GOPATH=$HOME/go
+      export PATH=$PATH:/usr/local/go/bin
+      export PATH=$PATH:$GOPATH/bin
+    dest: /etc/profile.d/go.sh
+    mode: '0644'
+  become: true
+
+- name: Clean up temporary file
+  file:
+    path: "/tmp/{{ go_version }}.linux-amd64.tar.gz"
+    state: absent
