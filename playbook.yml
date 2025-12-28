@@ -11,6 +11,7 @@
     - include_tasks: tasks/iptables.yml
     - include_tasks: tasks/crowdsec.yml
     - include_tasks: tasks/sysctl.yml
+    - include_tasks: tasks/timezone.yml
 
   roles:
     - devsec.hardening.os_hardening
