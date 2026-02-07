@@ -16,6 +16,7 @@
     - trash-cli
     - ripgrep
     - fd-find
+    - 7zip
     - unattended-upgrades
 
 - name: Configure unattended-upgrades
