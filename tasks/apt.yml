@@ -1,24 +1,24 @@
 - name: Package installation
-  apt: name={{ item }} update_cache=yes state=latest
-  become: true
-  with_items:
-    - git
-    - htop
-    - neovim
-    - ncdu
-    - zip
-    - unzip
-    - locate
-    - curl
-    - tmux
-    - jq
-    - iputils-ping
-    - trash-cli
-    - ripgrep
-    - fd-find
-    - 7zip
-    - unattended-upgrades
+  apt:
+    update_cache: yes
+    state: latest
+    name:
+      - git
+      - htop
+      - neovim
+      - ncdu
+      - zip
+      - unzip
+      - locate
+      - curl
+      - tmux
+      - jq
+      - iputils-ping
+      - trash-cli
+      - ripgrep
+      - fd-find
+      - 7zip
+      - unattended-upgrades
 
 - name: Configure unattended-upgrades
   command: dpkg-reconfigure -f noninteractive unattended-upgrades
-  become: true
