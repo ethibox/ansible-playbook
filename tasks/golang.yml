@@ -18,14 +18,12 @@
   file:
     path: /usr/local/go
     state: absent
-  become: true
 
 - name: Extract Go to /usr/local
   unarchive:
     src: "/tmp/{{ go_version }}.linux-amd64.tar.gz"
     dest: /usr/local
     remote_src: yes
-  become: true
 
 - name: Setup Go environment variables
   copy:
@@ -35,7 +33,6 @@
       export PATH=$PATH:$GOPATH/bin
     dest: /etc/profile.d/go.sh
     mode: '0644'
-  become: true
 
 - name: Clean up temporary file
   file:

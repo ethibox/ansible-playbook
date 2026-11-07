@@ -7,4 +7,3 @@
 - name: Install latest rclone
   shell: "curl https://rclone.org/install.sh | bash"
   when: rclone_exists.rc != 0
-  become: true

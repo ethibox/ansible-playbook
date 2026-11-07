@@ -2,17 +2,14 @@
   shell:
     cmd: "curl -s https://install.crowdsec.net | sh"
     creates: "/etc/apt/sources.list.d/crowdsec.list"
-  become: yes
 
 - name: Install CrowdSec package
   apt:
     name: crowdsec
     state: present
     update_cache: yes
-  become: yes
 
 - name: Install CrowdSec firewall bouncer for iptables
   apt:
     name: crowdsec-firewall-bouncer-iptables
     state: present
-  become: yes

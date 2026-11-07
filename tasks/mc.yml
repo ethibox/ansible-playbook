@@ -3,4 +3,3 @@
     url: https://dl.min.io/client/mc/release/linux-amd64/mc
     dest: /usr/local/bin/mc
     mode: '0755'
-  become: true

@@ -18,7 +18,6 @@
     mode: '0755'
 
 - name: Install bzip2 for unarchiving restic
-  become: true
   apt:
     name: bzip2
     state: present
@@ -42,7 +41,6 @@
     mode: '0755'
     owner: root
     group: root
-  become: yes
   
 - name: Clean up temporary directory
   file:
