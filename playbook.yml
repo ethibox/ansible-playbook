@@ -4,6 +4,8 @@
   vars:
     ssh_server_ports: ['22']
     allowed_ports: ['80', '443']
+    sysctl_overwrite:
+      net.ipv4.ip_forward: 1
 
   pre_tasks:
     - include_tasks: tasks/mc.yml
