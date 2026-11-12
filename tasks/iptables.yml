@@ -16,10 +16,12 @@
       -A INPUT -i lo -j ACCEPT
       -A INPUT -m conntrack --ctstate INVALID -j DROP
       -A INPUT -p tcp -m multiport --dports {{ ssh_server_ports | join(',') }} -j ACCEPT
-      -A INPUT -p tcp -m multiport --dports {{ allowed_ports | join(',') }} -j ACCEPT
+      -A INPUT -p tcp -m multiport --dports {{ ports | join(',') }} -j ACCEPT
       -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-      -A DOCKER-USER -i {{ ansible_default_ipv4.interface }} -m conntrack --ctstate NEW {% for port in allowed_ports %}-m conntrack ! --ctorigdstport {{ port }} {% endfor %}-j DROP
+      -A DOCKER-USER -i {{ ansible_default_ipv4.interface }} -m conntrack --ctstate NEW {% for port in ports %}-m conntrack ! --ctorigdstport {{ port }} {% endfor %}-j DROP
       COMMIT
+  vars:
+    ports: "{{ allowed_ports.split(',') if allowed_ports is string else allowed_ports }}"
   register: firewall_rules
   notify: Restart CrowdSec firewall bouncer
 
