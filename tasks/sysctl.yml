@@ -13,3 +13,12 @@
     sysctl_set: yes
     state: present
     reload: yes
+
+- name: Disable IPv6
+  sysctl:
+    name: "net.ipv6.conf.{{ item }}.disable_ipv6"
+    value: "1"
+    sysctl_set: yes
+    state: present
+    reload: yes
+  loop: [all, default]
