@@ -13,3 +13,12 @@
   apt:
     name: crowdsec-firewall-bouncer-iptables
     state: present
+
+- name: Protect Docker containers with CrowdSec firewall bouncer
+  copy:
+    dest: /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml.local
+    content: |
+      iptables_chains:
+        - INPUT
+        - DOCKER-USER
+  notify: Restart CrowdSec firewall bouncer

@@ -1,6 +1,10 @@
 - hosts: "{{ target | default('all') }}"
   become: yes
 
+  vars:
+    ssh_server_ports: ['22']
+    allowed_ports: ['80', '443']
+
   pre_tasks:
     - include_tasks: tasks/mc.yml
     - include_tasks: tasks/apt.yml
@@ -12,6 +16,12 @@
     - include_tasks: tasks/crowdsec.yml
     - include_tasks: tasks/sysctl.yml
     - include_tasks: tasks/timezone.yml
+
+  handlers:
+    - name: Restart CrowdSec firewall bouncer
+      systemd:
+        name: crowdsec-firewall-bouncer
+        state: restarted
 
   roles:
     - devsec.hardening.os_hardening

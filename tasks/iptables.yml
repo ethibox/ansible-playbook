@@ -3,46 +3,26 @@
     name: iptables-persistent
     state: present
 
-- name: Set default INPUT policy to ACCEPT temporarily
-  iptables:
-    chain: INPUT
-    policy: ACCEPT
+- name: Save firewall rules for reboot
+  copy:
+    dest: /etc/iptables/rules.v4
+    content: |
+      *filter
+      :INPUT DROP [0:0]
+      :DOCKER-USER - [0:0]
+      -F INPUT
+      -F DOCKER-USER
+      -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+      -A INPUT -i lo -j ACCEPT
+      -A INPUT -m conntrack --ctstate INVALID -j DROP
+      -A INPUT -p tcp -m multiport --dports {{ ssh_server_ports | join(',') }} -j ACCEPT
+      -A INPUT -p tcp -m multiport --dports {{ allowed_ports | join(',') }} -j ACCEPT
+      -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+      -A DOCKER-USER -i {{ ansible_default_ipv4.interface }} -m conntrack --ctstate NEW {% for port in allowed_ports %}-m conntrack ! --ctorigdstport {{ port }} {% endfor %}-j DROP
+      COMMIT
+  register: firewall_rules
+  notify: Restart CrowdSec firewall bouncer
 
-- name: Flush all iptables rules
-  iptables:
-    flush: yes
-
-- name: Allow incoming SSH connections
-  iptables:
-    chain: INPUT
-    protocol: tcp
-    destination_port: 22
-    jump: ACCEPT
-
-- name: Allow loopback traffic
-  iptables:
-    chain: INPUT
-    in_interface: lo
-    jump: ACCEPT
-
-- name: Allow established and related incoming connections
-  iptables:
-    chain: INPUT
-    ctstate: ESTABLISHED,RELATED
-    jump: ACCEPT
-
-- name: Allow incoming ICMP (ping)
-  iptables:
-    chain: INPUT
-    protocol: icmp
-    icmp_type: echo-request
-    jump: ACCEPT
-
-- name: Set default INPUT policy to DROP
-  iptables:
-    chain: INPUT
-    policy: DROP
-
-- name: Save iptables rules
-  shell: netfilter-persistent save
-  changed_when: false
+- name: Apply firewall rules
+  command: iptables-restore --noflush /etc/iptables/rules.v4
+  when: firewall_rules.changed
