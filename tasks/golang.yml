@@ -8,22 +8,31 @@
   set_fact:
     go_version: "{{ go_versions.json[0].version }}"
 
+- name: Get installed Go version
+  shell: head -n1 /usr/local/go/VERSION
+  register: go_installed
+  failed_when: false
+  changed_when: false
+
 - name: Download Go
   get_url:
     url: "https://go.dev/dl/{{ go_version }}.linux-amd64.tar.gz"
     dest: "/tmp/{{ go_version }}.linux-amd64.tar.gz"
     mode: '0644'
+  when: go_installed.stdout != go_version
 
 - name: Remove existing Go installation
   file:
     path: /usr/local/go
     state: absent
+  when: go_installed.stdout != go_version
 
 - name: Extract Go to /usr/local
   unarchive:
     src: "/tmp/{{ go_version }}.linux-amd64.tar.gz"
     dest: /usr/local
     remote_src: yes
+  when: go_installed.stdout != go_version
 
 - name: Setup Go environment variables
   copy:
