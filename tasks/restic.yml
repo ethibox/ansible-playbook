@@ -11,11 +11,18 @@
   set_fact:
     restic_version: "{{ restic_latest_release.json.tag_name | regex_replace('^v', '') }}"
 
+- name: Get installed restic version
+  shell: /usr/local/bin/restic version | cut -d' ' -f2
+  register: restic_installed
+  failed_when: false
+  changed_when: false
+
 - name: Create temporary directory for restic download
   file:
     path: "/tmp/restic"
     state: directory
     mode: '0755'
+  when: restic_installed.stdout != restic_version
 
 - name: Install bzip2 for unarchiving restic
   apt:
@@ -27,11 +34,13 @@
     url: "https://github.com/restic/restic/releases/download/v{{ restic_version }}/restic_{{ restic_version }}_linux_amd64.bz2"
     dest: "/tmp/restic/restic_{{ restic_version }}_linux_amd64.bz2"
     mode: '0644'
+  when: restic_installed.stdout != restic_version
 
 - name: Decompress restic binary
   command: "bzip2 -d /tmp/restic/restic_{{ restic_version }}_linux_amd64.bz2"
   args:
     creates: "/tmp/restic/restic_{{ restic_version }}_linux_amd64"
+  when: restic_installed.stdout != restic_version
 
 - name: Install restic binary
   copy:
@@ -41,6 +50,7 @@
     mode: '0755'
     owner: root
     group: root
+  when: restic_installed.stdout != restic_version
   
 - name: Clean up temporary directory
   file:
